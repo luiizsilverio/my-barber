@@ -1,7 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['github.com','utfs.io','img.freepik.com']
+    remotePatterns: [
+      { hostname: 'github.com' },
+      { hostname: 'utfs.io' },
+      { hostname: 'img.freepik.com' }
+    ]
   }
 };
 
