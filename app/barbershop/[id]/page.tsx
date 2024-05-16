@@ -1,6 +1,8 @@
-import { db } from "@/app/_lib/prisma"
+import { getServerSession } from "next-auth";
 import BarberShopInfo from "../_components/barbershop-info";
 import ServiceItem from "../_components/service-item";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { db } from "@/app/_lib/prisma"
 
 interface Props {
   params: {
@@ -9,6 +11,7 @@ interface Props {
 }
 
 export default async function BarberShopDetailsPage({ params }: Props) {
+  const session = await getServerSession(authOptions); 
 
   const barbershop = await db.barbershop.findFirst({
     where: {
@@ -26,12 +29,16 @@ export default async function BarberShopDetailsPage({ params }: Props) {
 
   return (
     <div className="w-full flex flex-col gap-3 items-center">      
-      <BarberShopInfo barbershop={barbershop} />    
+      <BarberShopInfo barbershop={barbershop} />   
     
       <div className="max-w-[1500px]">
         <div className="flex flex-wrap gap-3 justify-center">
           {barbershop.services.map((service) => (
-            <ServiceItem key={service.id} service={service} />
+            <ServiceItem 
+              key={service.id} 
+              service={service} 
+              isAuthenticated={!!session?.user}
+            />
           ))}
         </div>
       </div>

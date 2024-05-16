@@ -1,13 +1,27 @@
+"use client"
+
+import Image from "next/image"
+import { signIn } from "next-auth/react";
 import { Button } from "@/app/_components/ui/button"
 import { Card, CardContent } from "@/app/_components/ui/card"
 import { Service } from "@prisma/client"
-import Image from "next/image"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/app/_components/ui/sheet";
 
 interface Props {
-  service: Service
+  service: Service;
+  isAuthenticated?: boolean;
 }
 
-export default function ServiceItem({ service }: Props) {
+export default function ServiceItem({ service, isAuthenticated }: Props) {
+  
+  function handleBookingClick() {
+    if (!isAuthenticated) {
+      return signIn("google");
+    }
+
+    // TODO abrir modal de agendamento
+  }
+
   return (
     <Card className="w-[370px]">
       <CardContent className="p-3">
@@ -35,7 +49,24 @@ export default function ServiceItem({ service }: Props) {
                   currency: "BRL"
                 }).format(Number(service.price))}
               </p>
-              <Button variant="secondary" className="max-h-9">Reservar</Button>
+
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button 
+                    variant="secondary" 
+                    className="max-h-9" 
+                    onClick={handleBookingClick}
+                    >
+                    Reservar
+                  </Button>
+                </SheetTrigger>
+
+                <SheetContent>
+                  <SheetHeader>
+                    <SheetTitle>Fazer Reserva</SheetTitle>
+                  </SheetHeader>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
         </div>

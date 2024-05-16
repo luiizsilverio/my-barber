@@ -4,6 +4,8 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { ChevronLeftIcon, MapPinIcon, MenuIcon, StarIcon } from "lucide-react"
 import { Button } from "@/app/_components/ui/button"
+import { Sheet, SheetContent, SheetTrigger } from "@/app/_components/ui/sheet"
+import SideMenu from "@/app/_components/side-menu"
 import { Barbershop } from "@prisma/client"
 
 interface Props {
@@ -14,7 +16,7 @@ export default function BarberShopInfo({ barbershop }: Props) {
   const router = useRouter();
 
   function handleBackClick() {
-    router.back();
+    router.replace("/");
   }
   
   return (
@@ -29,9 +31,17 @@ export default function BarberShopInfo({ barbershop }: Props) {
           <ChevronLeftIcon />
         </Button>
 
-        <Button size="icon" variant="outline" className="z-50 absolute top-5 right-5">
-          <MenuIcon />
-        </Button>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button size="icon" variant="outline" className="z-50 absolute top-5 right-5">
+              <MenuIcon />
+            </Button>
+          </SheetTrigger>
+
+          <SheetContent className="p-0">
+            <SideMenu />
+          </SheetContent>
+        </Sheet> 
 
         <Image
           className="opacity-75 object-cover"
