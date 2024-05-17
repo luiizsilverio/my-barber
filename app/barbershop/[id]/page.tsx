@@ -18,7 +18,7 @@ export default async function BarberShopDetailsPage({ params }: Props) {
       id: params.id
     },
     include: {
-      services: true
+      services: true,
     }
   })
 
@@ -37,6 +37,7 @@ export default async function BarberShopDetailsPage({ params }: Props) {
             <ServiceItem 
               key={service.id} 
               service={service} 
+              barbershop={barbershop}
               isAuthenticated={!!session?.user}
             />
           ))}

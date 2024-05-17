@@ -7,7 +7,7 @@ import SideMenu from "./side-menu";
 
 export default function Header() {
   return ( 
-    <Card>
+    <Card  className="rounded-none">
       <CardContent className="flex flex-row p-5 justify-between items-center">
         <Image src="/logo.png" alt="logo My-Barber" height={21} width={120} />
         

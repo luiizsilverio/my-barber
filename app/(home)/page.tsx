@@ -41,10 +41,14 @@ export default async function Home() {
           Recomendados
         </h2>
 
-        <div className={`
-          flex px-5 gap-4 overflow-x-auto 
-          [&::-webkit-scrollbar]:hidden
-        `}>
+        <div           
+          className={`
+            flex px-5 py-1 gap-4 overflow-x-auto 
+            [&::-webkit-scrollbar]:h-[10px]
+            [&::-webkit-scrollbar-track]:bg-card
+            [&::-webkit-scrollbar-thumb]:bg-secondary
+          `}
+        >
           {barbershops.map((barbershop) => (
             <BarberShopItem key={barbershop.id} barbershop={barbershop} />
           ))}
@@ -57,8 +61,10 @@ export default async function Home() {
         </h2>
 
         <div className={`
-          flex px-5 gap-4 overflow-x-auto 
-          [&::-webkit-scrollbar]:hidden
+          flex px-5 py-1 gap-4 overflow-x-auto 
+          [&::-webkit-scrollbar]:h-[10px]
+          [&::-webkit-scrollbar-track]:bg-card
+          [&::-webkit-scrollbar-thumb]:bg-secondary
         `}>
           {barbershops.map((barbershop) => (
             <BarberShopItem key={barbershop.id} barbershop={barbershop} />
