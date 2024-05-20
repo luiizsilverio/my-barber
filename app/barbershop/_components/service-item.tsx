@@ -2,9 +2,9 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image"
-import { format } from "date-fns";
+import { format, setHours, setMinutes } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { Button } from "@/app/_components/ui/button"
 import { Card, CardContent } from "@/app/_components/ui/card"
 import { Calendar } from "@/app/_components/ui/calendar"
@@ -19,6 +19,8 @@ import {
 
 import { Barbershop, Service } from "@prisma/client"
 import { generateDayTimeList } from "../[id]/_helpers/hours";
+import { TUser } from "@/app/api/auth/[...nextauth]/route";
+import SaveBooking from "@/app/_actions/save-booking";
 
 interface Props {
   service: Service;
@@ -30,6 +32,8 @@ export default function ServiceItem({ service, barbershop, isAuthenticated }: Pr
   const [date, setDate] = useState<Date | undefined>();
   const [hour, setHour] = useState<String | undefined>();
   
+  const { data } = useSession();
+
   const timeList = useMemo(() => date ? generateDayTimeList(date) : [], [date]);
 
   function handleBookingClick() {
@@ -38,6 +42,26 @@ export default function ServiceItem({ service, barbershop, isAuthenticated }: Pr
     }
 
     // TODO abrir modal de agendamento
+  }
+
+  async function handleBookingSubmit() {
+    if (!hour || !date || !data?.user) return;
+
+    const dtHour = Number(hour.split(":")[0]); // hour: "09:45" -> retorna 9
+    const dtMin = Number(hour.split(":")[1]);  // hour: "09:45" -> retorna 45
+    const newDate = setMinutes(setHours(date, dtHour), dtMin);
+
+    try {
+      await SaveBooking({
+        serviceId: service.id,
+        barbershopId: service.barbershopId,
+        userId: (data.user as TUser).id,
+        date: newDate,
+      })
+    }
+    catch (error) {
+      console.error(error);
+    }
   }
 
   function handleDateClick(date: Date | undefined) {
@@ -172,7 +196,9 @@ export default function ServiceItem({ service, barbershop, isAuthenticated }: Pr
                     
                     {!!date && !!hour &&
                       <SheetFooter className="mt-4">
-                        <Button className="w-full">Confirmar</Button>
+                        <Button onClick={handleBookingSubmit} className="w-full">
+                          Confirmar
+                        </Button>
                       </SheetFooter>
                     }
 

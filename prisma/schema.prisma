@@ -34,7 +34,7 @@ model Barbershop {
 }
 
 model Service {
-  id          String  @id @default(uuid())
+  id          String    @id @default(uuid())
   name        String
   price       Decimal
   description String
@@ -46,7 +46,8 @@ model Service {
 }
 
 model Booking {
-  id String @id @default(uuid())
+  id   String   @id @default(uuid())
+  date DateTime
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
