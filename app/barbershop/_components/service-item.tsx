@@ -1,10 +1,13 @@
 "use client"
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 import Image from "next/image"
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { format, setHours, setMinutes } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { signIn, useSession } from "next-auth/react";
 import { Button } from "@/app/_components/ui/button"
 import { Card, CardContent } from "@/app/_components/ui/card"
 import { Calendar } from "@/app/_components/ui/calendar"
@@ -31,7 +34,11 @@ interface Props {
 export default function ServiceItem({ service, barbershop, isAuthenticated }: Props) {
   const [date, setDate] = useState<Date | undefined>();
   const [hour, setHour] = useState<String | undefined>();
+  const [loading, setLoading] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
   
+  const router = useRouter();
+
   const { data } = useSession();
 
   const timeList = useMemo(() => date ? generateDayTimeList(date) : [], [date]);
@@ -47,6 +54,8 @@ export default function ServiceItem({ service, barbershop, isAuthenticated }: Pr
   async function handleBookingSubmit() {
     if (!hour || !date || !data?.user) return;
 
+    setLoading(true);
+
     const dtHour = Number(hour.split(":")[0]); // hour: "09:45" -> retorna 9
     const dtMin = Number(hour.split(":")[1]);  // hour: "09:45" -> retorna 45
     const newDate = setMinutes(setHours(date, dtHour), dtMin);
@@ -58,9 +67,24 @@ export default function ServiceItem({ service, barbershop, isAuthenticated }: Pr
         userId: (data.user as TUser).id,
         date: newDate,
       })
+
+      setShowCalendar(false);
+      setHour(undefined);
+      setDate(undefined);
+
+      toast("Reserva realizada com sucesso!", {
+        description: format(newDate, "'Para' dd 'de' MMMM 'às' HH':'mm'.'", { locale: ptBR }),
+        action: {
+          label: "Visualizar",
+          onClick: () => router.push("/bookings")
+        }
+      })
     }
     catch (error) {
       console.error(error);
+    }
+    finally {
+      setLoading(false);
     }
   }
 
@@ -72,6 +96,7 @@ export default function ServiceItem({ service, barbershop, isAuthenticated }: Pr
   function handleHourClick(time: string) {
     setHour(time);
   }
+
 
   return (
     <Card className="w-[370px]">
@@ -102,7 +127,7 @@ export default function ServiceItem({ service, barbershop, isAuthenticated }: Pr
                 }).format(Number(service.price))}
               </p>
 
-              <Sheet>
+              <Sheet open={showCalendar} onOpenChange={setShowCalendar}>
                 <SheetTrigger asChild>
                   <Button 
                     variant="secondary" 
@@ -196,7 +221,14 @@ export default function ServiceItem({ service, barbershop, isAuthenticated }: Pr
                     
                     {!!date && !!hour &&
                       <SheetFooter className="mt-4">
-                        <Button onClick={handleBookingSubmit} className="w-full">
+                        <Button 
+                          disabled={loading}
+                          onClick={handleBookingSubmit} 
+                          className="w-full"
+                        >
+                          {loading && 
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          }
                           Confirmar
                         </Button>
                       </SheetFooter>
