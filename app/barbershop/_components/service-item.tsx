@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image"
@@ -20,10 +20,11 @@ import {
   SheetTrigger 
 } from "@/app/_components/ui/sheet";
 
-import { Barbershop, Service } from "@prisma/client"
+import { Barbershop, Booking, Service } from "@prisma/client"
 import { generateDayTimeList } from "../[id]/_helpers/hours";
 import { TUser } from "@/app/api/auth/[...nextauth]/route";
-import SaveBooking from "@/app/_actions/save-booking";
+import saveBooking from "@/app/_actions/save-booking";
+import getDayBookings from "@/app/_actions/get-day-bookings";
 
 interface Props {
   service: Service;
@@ -36,12 +37,29 @@ export default function ServiceItem({ service, barbershop, isAuthenticated }: Pr
   const [hour, setHour] = useState<String | undefined>();
   const [loading, setLoading] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
+  const [dayBookings, setDayBookings] = useState<Booking[]>([]);
   
   const router = useRouter();
 
   const { data } = useSession();
 
-  const timeList = useMemo(() => date ? generateDayTimeList(date) : [], [date]);
+  const timeList = useMemo(() => {
+    if (!date) return [];
+
+    return generateDayTimeList(date).filter((time) => {
+      const timeHour = Number(time.split(":")[0]);
+      const timeMinutes = Number(time.split(":")[1]);
+
+      const booking = dayBookings.find((booking) => {
+        const bookingHour = booking.date.getHours();
+        const bookingMinutes = booking.date.getMinutes();
+        return bookingHour === timeHour && bookingMinutes === timeMinutes;
+      });
+
+      return !booking;
+    })
+  }, [date, dayBookings]);
+
 
   function handleBookingClick() {
     if (!isAuthenticated) {
@@ -61,7 +79,7 @@ export default function ServiceItem({ service, barbershop, isAuthenticated }: Pr
     const newDate = setMinutes(setHours(date, dtHour), dtMin);
 
     try {
-      await SaveBooking({
+      await saveBooking({
         serviceId: service.id,
         barbershopId: service.barbershopId,
         userId: (data.user as TUser).id,
@@ -96,6 +114,15 @@ export default function ServiceItem({ service, barbershop, isAuthenticated }: Pr
   function handleHourClick(time: string) {
     setHour(time);
   }
+
+  useEffect(() => {
+    const refreshAvailableHours = async() => {
+      const lstDays = await getDayBookings(barbershop.id, date!);
+      setDayBookings(lstDays);
+    }
+
+    if (date) refreshAvailableHours();
+  }, [date])
 
 
   return (

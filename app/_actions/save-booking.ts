@@ -8,7 +8,8 @@ interface SaveBookingParams {
   userId: string;
   date: Date;
 }
-export default async function SaveBooking(params: SaveBookingParams) {
+
+export default async function saveBooking(params: SaveBookingParams) {
   await db.booking.create({
     data: {
       serviceId: params.serviceId,
