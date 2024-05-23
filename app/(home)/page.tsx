@@ -1,18 +1,43 @@
+import { getServerSession } from "next-auth";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 import Header from "../_components/header";
 import Search from "./_components/search";
 import BookingItem from "../_components/booking-item";
-import { db } from "../_lib/prisma";
 import BarberShopItem from "./_components/barbershop-item";
+import { TUser, authOptions } from "../api/auth/[...nextauth]/route";
+import { db } from "../_lib/prisma";
 
 export default async function Home() {
-  const barbershops = await db.barbershop.findMany({
-    orderBy: {
-      name: 'asc'
-    }
-  });
+  const session = await getServerSession(authOptions);
+
+  const [barbershops, confirmedBookings] = await Promise.all([
+    db.barbershop.findMany({
+      orderBy: {
+        name: 'asc'
+      }
+    }),
+
+    session?.user ? 
+      db.booking.findMany({
+        where: {
+          userId: (session.user as TUser).id,
+          date: {
+            gte: new Date()
+          }
+        },
+        include: {
+          service: true,
+          barbershop: true
+        },
+        orderBy: {
+          date: 'asc'
+        }
+      })
+    : Promise.resolve([])
+  ])
+
 
   return (
     <div>
@@ -33,7 +58,11 @@ export default async function Home() {
         <h2 className="text-sm uppercase text-gray-400 font-bold mb-3">
           Agendamento
         </h2>
-        <BookingItem />
+        <div className="flex flex-wrap gap-3">
+          {
+            confirmedBookings.map(booking => <BookingItem key={booking.id} booking={booking} />)
+          }
+        </div>
       </div>
 
       <div className="mt-6">

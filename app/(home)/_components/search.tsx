@@ -6,7 +6,7 @@ import { SearchIcon } from "lucide-react";
 
 export default function Search() {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 max-w-[600px]">
       <Input placeholder="Procure uma barbearia..." />
       <Button variant="default">
         <SearchIcon size={20} />

@@ -4,12 +4,15 @@ import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import SideMenu from "./side-menu";
+import Link from "next/link";
 
 export default function Header() {
   return ( 
     <Card  className="rounded-none">
       <CardContent className="flex flex-row p-5 justify-between items-center">
-        <Image src="/logo.png" alt="logo My-Barber" height={21} width={120} />
+        <Link href="/">
+          <Image src="/logo.png" alt="logo My-Barber" height={21} width={120} />
+        </Link>
         
         <Sheet>
           <SheetTrigger asChild>
