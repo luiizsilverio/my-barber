@@ -44,9 +44,11 @@ export default async function BookingsPage() {
         <div className="px-5 pt-8">
           <h1 className="text-xl font-bold">Agendamentos</h1>
 
-          <h2 className="text-gray-400 uppercase font-bold text-sm mt-6 mb-3">
-            Confirmados
-          </h2>
+          {confirmedBookings.length &&
+            <h2 className="text-gray-400 uppercase font-bold text-sm mt-6 mb-3">
+              Confirmados
+            </h2>
+          }
 
           <div className="flex flex-wrap gap-3">
             {confirmedBookings.map((booking) => (
@@ -54,9 +56,11 @@ export default async function BookingsPage() {
             ))}
           </div>
 
-          <h2 className="text-gray-400 uppercase font-bold text-sm mt-8 mb-3">
-            Finalizados
-          </h2>
+          {finishedBookings.length &&
+            <h2 className="text-gray-400 uppercase font-bold text-sm mt-8 mb-3">
+              Finalizados
+            </h2>
+          }
 
           <div className="flex flex-wrap gap-3">
             {finishedBookings.map((booking) => (

@@ -211,15 +211,15 @@ export default function ServiceItem({ service, barbershop, isAuthenticated }: Pr
                     <Card>
                       <CardContent className="p-3 flex flex-col gap-1">
                         <div className="flex justify-between">
-                          <h2 className="font-bold">{service.name}</h2>
-                          <h3 className="font-bold text-sm">
+                          <p className="font-bold">{service.name}</p>
+                          <h2 className="font-bold text-sm">
                             {
                               Intl.NumberFormat("pt-BR", {
                                 style: "currency",
                                 currency: "BRL"
                               }).format(Number(service.price))
                             }
-                          </h3>
+                          </h2>
                         </div>
 
                         {date && 
