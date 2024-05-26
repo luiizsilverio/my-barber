@@ -22,9 +22,9 @@ import {
 
 import { Barbershop, Booking, Service } from "@prisma/client"
 import { generateDayTimeList } from "../[id]/_helpers/hours";
-import { TUser } from "@/app/api/auth/[...nextauth]/route";
 import saveBooking from "@/app/_actions/save-booking";
 import getDayBookings from "@/app/_actions/get-day-bookings";
+import { TUser } from "@/app/_lib/auth";
 
 interface Props {
   service: Service;

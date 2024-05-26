@@ -6,8 +6,8 @@ import Header from "../_components/header";
 import Search from "./_components/search";
 import BookingItem from "../_components/booking-item";
 import BarberShopItem from "./_components/barbershop-item";
-import { TUser, authOptions } from "../api/auth/[...nextauth]/route";
 import { db } from "../_lib/prisma";
+import { TUser, authOptions } from "../_lib/auth";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);

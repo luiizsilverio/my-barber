@@ -1,10 +1,10 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { TUser, authOptions } from "../api/auth/[...nextauth]/route";
 import Header from "@/app/_components/header";
 import { db } from "../_lib/prisma";
 import BookingItem from "../_components/booking-item";
 import { isFuture, isPast } from "date-fns";
+import { TUser, authOptions } from "../_lib/auth";
 
 export default async function BookingsPage() {
   // recuperar a sessão do usuário (ver se ele está logado)
