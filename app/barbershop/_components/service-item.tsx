@@ -1,12 +1,12 @@
 "use client"
 
+import Image from "next/image"
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
-import Image from "next/image"
+import { addDays, format, setHours, setMinutes } from "date-fns";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { format, setHours, setMinutes } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Button } from "@/app/_components/ui/button"
 import { Card, CardContent } from "@/app/_components/ui/card"
@@ -174,7 +174,7 @@ export default function ServiceItem({ service, barbershop, isAuthenticated }: Pr
                     mode="single"
                     selected={date}
                     onSelect={handleDateClick}
-                    fromDate={new Date()}
+                    fromDate={addDays(new Date(), 1)}
                     locale={ptBR}
                     className="w-full flex justify-center my-3"
                     styles={{
