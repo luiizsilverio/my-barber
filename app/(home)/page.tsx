@@ -18,7 +18,7 @@ export default async function Home() {
         name: 'asc'
       }
     }),
-
+    
     session?.user ? 
       db.booking.findMany({
         where: {
@@ -38,6 +38,8 @@ export default async function Home() {
     : Promise.resolve([])
   ])
 
+  const populares = Array.from(barbershops)
+    .sort(() => Math.random() - 0.5);
 
   return (
     <div>
@@ -100,7 +102,7 @@ export default async function Home() {
           [&::-webkit-scrollbar-track]:bg-card
           [&::-webkit-scrollbar-thumb]:bg-secondary
         `}>
-          {barbershops.map((barbershop) => (
+          {populares.map((barbershop) => (
             <BarberShopItem key={barbershop.id} barbershop={barbershop} />
           ))}
         </div>
