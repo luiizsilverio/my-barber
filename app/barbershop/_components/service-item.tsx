@@ -25,6 +25,7 @@ import { generateDayTimeList } from "../[id]/_helpers/hours";
 import saveBooking from "@/app/_actions/save-booking";
 import getDayBookings from "@/app/_actions/get-day-bookings";
 import { TUser } from "@/app/_lib/auth";
+import BookingInfo from "@/app/_components/booking-info";
 
 interface Props {
   service: Service;
@@ -208,60 +209,29 @@ export default function ServiceItem({ service, barbershop, isAuthenticated }: Pr
                   )}
 
                   <div className="py-5 px-5 border-t border-solid border-secondary">
-                    <Card>
-                      <CardContent className="p-3 flex flex-col gap-1">
-                        <div className="flex justify-between">
-                          <p className="font-bold">{service.name}</p>
-                          <h2 className="font-bold text-sm">
-                            {
-                              Intl.NumberFormat("pt-BR", {
-                                style: "currency",
-                                currency: "BRL"
-                              }).format(Number(service.price))
-                            }
-                          </h2>
-                        </div>
-
-                        {date && 
-                          <div className="flex justify-between">
-                            <p className="text-sm text-[#838896]">Data</p>
-                            <p className="text-sm">
-                              {format(date, "dd 'de' MMMM",  {locale: ptBR})}
-                            </p>
-                          </div>
-                        }
-
-                        {hour &&
-                          <div className="flex justify-between">
-                            <p className="text-sm text-[#838896]">Horário</p>
-                            <p className="text-sm">{hour}</p>
-                          </div>
-                        }
-                        
-                        <div className="flex justify-between">
-                          <p className="text-sm text-[#838896]">Barbearia</p>
-                          <p className="text-sm">{barbershop.name}</p>
-                        </div>
-                        
-                      </CardContent>
-                    </Card>
-                    
-                    {!!date && !!hour &&
-                      <SheetFooter className="mt-4">
-                        <Button 
-                          disabled={loading}
-                          onClick={handleBookingSubmit} 
-                          className="w-full"
-                        >
-                          {loading && 
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          }
-                          Confirmar
-                        </Button>
-                      </SheetFooter>
-                    }
-
+                    <BookingInfo booking={{
+                      date,
+                      hour,
+                      barbershop,
+                      service
+                    }} />
                   </div>
+                    
+                  {!!date && !!hour &&
+                    <SheetFooter className="px-5">
+                      <Button 
+                        disabled={loading}
+                        onClick={handleBookingSubmit} 
+                        className="w-full"
+                      >
+                        {loading && 
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        }
+                        Confirmar
+                      </Button>
+                    </SheetFooter>
+                  }
+
                 </SheetContent>
               </Sheet>
             </div>

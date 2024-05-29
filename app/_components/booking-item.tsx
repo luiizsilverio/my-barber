@@ -26,6 +26,7 @@ import {
   AlertDialogTitle, 
   AlertDialogTrigger 
 } from "./ui/alert-dialog"
+import BookingInfo from "./booking-info"
 
 interface Props {
   // booking: Booking;
@@ -129,41 +130,12 @@ export default function BookingItem({ booking }: Props) {
             {isBookingFinished ? "Finalizado" : "Confirmado"}
           </Badge>
 
-          <Card>
-            <CardContent className="p-3 flex flex-col gap-1">
-              <div className="flex justify-between">
-                <p className="font-bold">{booking.service.name}</p>
-                <h2 className="font-bold text-sm">
-                  {
-                    Intl.NumberFormat("pt-BR", {
-                      style: "currency",
-                      currency: "BRL"
-                    }).format(Number(booking.service.price))
-                  }
-                </h2>
-              </div>
-
-              <div className="flex justify-between">
-                <p className="text-sm text-[#838896]">Data</p>
-                <p className="text-sm">
-                  {format(booking.date, "dd 'de' MMMM",  {locale: ptBR})}
-                </p>
-              </div>
-
-              <div className="flex justify-between">
-                <p className="text-sm text-[#838896]">Horário</p>
-                <p className="text-sm">
-                  {format(booking.date, "hh:mm")}
-                </p>
-              </div>
-              
-              <div className="flex justify-between">
-                <p className="text-sm text-[#838896]">Barbearia</p>
-                <p className="text-sm">{booking.barbershop.name}</p>
-              </div>
-              
-            </CardContent>
-          </Card>
+          <BookingInfo booking={{
+            date: booking.date,
+            hour: format(booking.date, "hh:mm"),
+            barbershop: booking.barbershop,
+            service: booking.service
+          }} />
 
           <SheetFooter className="flex-row gap-3 mt-6">
             <SheetClose asChild>
