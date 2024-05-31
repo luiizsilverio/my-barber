@@ -55,7 +55,7 @@ $ npm run dev
 <br />
 
 ## :camera_flash: Screenshots
-![](https://github.com/luiizsilverio/my-barber/tree/master/app/assets/my-barber.gif)
+![](https://github.com/luiizsilverio/my-barber/blob/master/app/assets/my-barber.gif)
 <br />
 
 
