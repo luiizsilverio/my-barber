@@ -45,7 +45,7 @@ $ git clone https://github.com/luiizsilverio/my-barber
 $ cd my-barber
 $ npm install
 ```
-Edite o arquivo ```.env``` e informe a string de conexão do banco e a API Key de autenticação.
+Renomeie o arquivo ```.env-example``` para ```.env``` e informe a string de conexão do banco e a API Key de autenticação.<br />
 Inicialize o Prisma e popule o banco com o Seed.
 ```bash
 $ npx prisma init --datasource-provider PostgreSQL
